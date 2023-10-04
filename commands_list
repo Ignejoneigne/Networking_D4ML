@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Allow your own connection
-sudo iptables -A INPUT -s 5.20.132.172 -j ACCEPT
+# Allow your own connection (with your Private IPv4 address)
+sudo iptables -A INPUT -s 172.31.18.211 -j ACCEPT
 
 # Flush existing rules and set default policies
 sudo iptables -P OUTPUT ACCEPT
@@ -17,9 +17,9 @@ sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 # 1. Allow incoming connections to port 25 (SMTP)
 sudo iptables -A INPUT -p tcp --dport 25 -j ACCEPT
 
-# 2. Allow outbound DNS connections (port 53 TCP/UDP)
-sudo iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
-sudo iptables -A OUTPUT -p tcp --dport 53 -j ACCEPT
+# Allow outbound DNS connections (port 53 TCP/UDP) to AWS DNS servers
+sudo iptables -A OUTPUT -p udp --dport 53 -d AmazonProvidedDNS_IP -j ACCEPT
+sudo iptables -A OUTPUT -p tcp --dport 53 -d AmazonProvidedDNS_IP -j ACCEPT
 
 # 3. Close all connections to port 143 (IMAP)
 sudo iptables -A INPUT -p tcp --dport 143 -j DROP
@@ -40,7 +40,8 @@ sudo iptables -A INPUT -s 192.168.42.250 -p tcp -m multiport --sports 137:139 -m
 sudo iptables -A INPUT -s 192.168.42.250 -p udp -m multiport --sports 137:139 -m time --timestart 18:00 --timestop 21:00 -j ACCEPT
 
 # 8. Allow SSH access (default port 22) for IT department
-sudo iptables -A INPUT -s 192.168.42.200/28 -p tcp --dport 22 -j ACCEPT
+sudo iptables -A INPUT -s 172.31.18.211/32 -p tcp --dport 22 -j ACCEPT
+
 
 # 9. Restrict all other incoming connections (except port 443)
 sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
