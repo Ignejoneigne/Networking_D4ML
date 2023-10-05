@@ -8,11 +8,7 @@ it_department_ip_range="192.168.42.200/28"
 hr_department_ip_range="192.168.42.150/29"
 backup_server_ip="192.168.42.250"
 local_dns_server_ip="192.168.42.251"
-
-# Your private IPv4 address
 your_private_ipv4="172.31.18.211"
-
-# AWS DNS IP (replace with the actual IP)
 AWS_DNS_IP="127.0.0.53"
 
 # Allow your own connection
